@@ -1,7 +1,9 @@
-1.1 JUDUL 
-XIX 
+1.1 JUDUL
+
+XIX
 
 1.2 LATAR BELAKANG 
+
 Project merupakan salah satu bagian akhir dari keseluruhan rangkaian kegiatan 
 praktikum Algoritma dan Pemrograman Dasar tahun 2025. Pelaksanaan praktikum harus 
 diselesaikan dengan membuat suatu projek aplikasi dengan mengimplementasikan semua 
@@ -9,7 +11,7 @@ modul yang dimulai dari modul I sampai dengan modul VI menggunakan bahasa
 pemrograman C++. Perencanaan project pembuatan aplikasi dibutuhkan beberapa macam 
 ide yang mudah dipahami dan mudah untuk disusun bentuk dari kodenya menggunakan 
 bahasa pemrograman C++ yang mencakup semua aspek dalam modul I sampai dengan 
-modul VI. 
+modul VI.
 Ide XIX yaitu ide yang disepakati bersama untuk dijadikan sebuah aplikasi 
 setelah ditinjau beberapa pertimbangan yang nantinya bisa dipastikan bahwa aplikasi sistem 
 manajemen tersebut mencakup semua materi dari modul I sampai dengan modul VI 
@@ -19,7 +21,9 @@ menggunakan bahasa pemrogramana C++. XIX ini memiliki banyak fitur di
 dalamanya yang sehingga bertujuan untuk mengimplementasikan atau mengaplikasikan 
 materi-materi yang telah diperoleh dari modul I sampai dengan modul VI pada praktikum 
 Algoritma dan Pemrograman Dasar tahun 2025. 
+
 1.3 DESKRIPSI PROGRAM 
+
 Program XIX ini merupakan game yang dirancang untuk menyediakan dua jenis 
 permainan interaktif, yaitu Tebak Angka (BOOM) dan GTRA (Kuis Teka-Teki), serta fitur 
 administrasi untuk mengelola soal kuis pada game GTRA. Saat memulai program, pengguna 
@@ -45,7 +49,9 @@ normal atau hard), melihat riwayat pemain yang menampilkan nama, skor, dan nyawa
 pemain, atau kembali ke menu utama. Admin dapat mengelola soal dengan memasukkan 
 pertanyaan, jawaban, dan poin. Setiap pengguna dapat memilih opsi keluar untuk 
 mengakhiri program sepenuhnya. 
+
 1.4 ALGORITMA 
+
 1. Mulai Program. 
 2. Program akan menampilkan menu awal yaitu pemilihan BOOM, GTRA dan exit. 
 3. Jika user memilih exit maka program selesai. 
