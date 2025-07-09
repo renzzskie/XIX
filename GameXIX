@@ -1,0 +1,695 @@
+#include <iostream>
+#include <ctime>
+#include <conio.h>
+#include <cstdlib>
+
+using namespace std;
+string hitam = "\033[30m";
+string reset = "\033[0m";
+string green = "\033[1;32m";
+string cyan = "\033[1;36m";
+string yellow = "\033[1;33m";
+string bold = "\033[1m";  
+string merah = "\033[31m";
+string ulang;
+
+struct gamePlayer{
+    string nama;
+    int skor = 0;
+    int nyawa = 3;
+};
+struct soal{
+    string pertanyaan;
+    string jawaban;
+    int poin;   
+};
+
+void spasi(string teks){
+    int panjang_teks = teks.length();
+    int sisa = 38 - panjang_teks;
+    int spasi_kiri = sisa / 2;
+    int spasi_kanan = sisa - spasi_kiri;
+	for (int i = 0; i < spasi_kiri; i++) cout << " ";
+    cout << teks;
+    for (int i = 0; i < spasi_kanan-1; i++) cout << " ";
+}
+
+string tostring(int num) {
+    if (num == 0) return "0";
+    
+    string res = "";
+    bool isNegative = false;
+    
+    if (num < 0) {
+        isNegative = true;
+        num = -num;
+    }
+
+    while (num > 0) {
+        res = char('0' + num % 10) + res;
+        num /= 10;
+    }
+
+    if (isNegative) res = '-' + res;
+
+    return res;
+}
+
+void garis(){
+	cout << "| |=====================================| |\n";
+}
+
+void logo(){
+	cout << " _________________________________________\n";
+	cout << "/  _____________________________________  \\\n";
+    cout << "| |";spasi(" _  _   ____   _  _ "); cout << "| |\n";
+    cout << "| |";spasi("( \\/ ) (_  _) ( \\/ )"); cout << "| |\n";
+    cout << "| |";spasi(" )  (   _)(_   )  ( "); cout << "| |\n";
+    cout << "| |";spasi("(_/\\_) (____) (_/\\_)"); cout << "| |\n";
+}
+
+void tampilangka() {
+	cout << " _________________________________________\n";
+	cout << "/  _____________________________________  \\\n";
+    cout << "| |"; spasi(" ____  _____  _____  __  __ "); cout << "| |\n";
+    cout << "| |"; spasi("(  _ \\(  _  )(  _  )(  \\/  )"); cout << "| |\n";
+    cout << "| |"; spasi(" ) _ < )(_)(  )(_)(  )    ( "); cout << "| |\n";
+    cout << "| |"; spasi("(____/(_____)(_____)(_/\\/\\_)"); cout << "| |\n";
+}
+
+void tampilteks(){
+    cout << R"(
+  _______________________________________
+ / _____________________________________ \
+| |     ____   _____  ____     ___      | | 
+| |    / ___| |_   _||  _  \  /   \     | |
+| |   | |  _    | |  |   _ / / /_\ \    | |
+| |   | |_| |   | |  | |\ \  |  _  |    | |
+| |    \____|   |_|  | | \ \ |_| |_|    | |
+| |                                     | |
+| |       G       T      R       A      | |
+| |=====================================| |
+)";
+
+}
+void cetakGaris(){
+    cout << "| |"; spasi("+============+"); cout << "| |\n";
+}
+
+void cetakMid(string* text, string* warna, int panjang, bool aktif) {
+    if (!text) return; 
+
+    string warnaTampil = aktif ? *warna : cyan;
+
+    cout << "| |";
+
+    for(int i = 0; i < panjang - text->length(); ++i){
+        if (i == (panjang - text->length()) / 2)
+            cout << warnaTampil << *text << cyan << reset;
+        else
+            cout << " ";
+    }
+
+    cout << "| |" << endl;
+}
+
+void multiP(){
+	int playerCount;
+    string players[5];
+    system("cls");
+    tampilangka();
+    cout << "| |"; spasi(""); cout << "| |\n";
+    garis();
+    cout << "| |"; spasi("Masukkan banyak pemain (2-5)"); cout << "| |\n";
+    cout << "| |_____________________________________| |\n";
+    cout << "|  "; spasi("Game XIX"); cout << "  |\n";
+    cout << "\\_________________________________________/\n";
+	int guess, min = 1, max = 100;
+        cout << ">> ";
+        while (!(cin >> playerCount)) {
+	        cout << "Masukkan angka!" << endl;
+			cin.clear();
+	        cin.ignore();
+	        continue;
+	    }
+        if (playerCount < 2 || playerCount > 5) {
+            cout << "Jumlah pemain tidak valid.\n";
+            system("pause");
+            return;
+        }
+        for (int i = 0; i < playerCount; i++) {
+            cout << "Masukkan nama pemain " << i + 1 << ": ";
+            cin >> players[i];
+        }
+		cout << "Halooo ";
+		for (int i = 0; i < playerCount; i++){
+			cout << players[i] <<", ";
+		}
+        cout << "tebak angka antara 1 - 100. Yang dapet angka BOOM, dia yang kalah!\n";
+        do{
+	        int boom = rand() % 100 + 1;
+			int turn = 0; 
+	        while (true) {
+				string mini = tostring(min), maxi = tostring(max); 
+				string currentPlayer = players[turn % playerCount];
+	        	system("pause");system("cls");
+	        	tampilangka();
+	        	cout << "| |"; spasi(""); cout << "| |\n";
+	    		cout << "| |"; spasi("Jangan sampai kena boom, nanti kalah!"); cout << "| |\n";
+	    		garis();
+	    		cout << "| |"; spasi("Giliran " + currentPlayer); cout << "| |\n";
+	    		cout << "| |"; spasi("Ayo tebak angka " + mini + " sampai " + maxi); cout << "| |\n";
+		        cout << "| |_____________________________________| |\n";
+			    cout << "|  "; spasi("Game XIX"); cout << "  |\n";
+			    cout << "\\_________________________________________/\n";
+	            do {
+					cout << "Ayo " << currentPlayer << " tebak angka " << min << " sampai " << max << endl;
+		            cout << ">> "; 
+		            while (!(cin >> guess) || guess <= min || guess >= max) {
+			            cout << "Angka harus antara " << min << " dan " << max << "!" << endl;
+						cin.clear();
+			            cin.ignore();
+			            continue;
+		        	}
+				} while (guess > max || guess < min);
+	            if (guess == boom) {
+	                cout << "BOOM! " << currentPlayer << " kalah!\n";
+	                cout << "Angka BOOM adalah: " << boom << "\n";
+	                break;
+	            } else if (guess < boom) {
+	                min = guess;
+	                cout << "Angka BOOM lebih BESAR dari " << guess << "\n";
+	            } else {
+	                max = guess;
+	                cout << "Angka BOOM lebih KECIL dari " << guess << "\n";
+	            }
+	            if (max - min == 2) {
+	                cout << "Semua pemain menghindari BOOM! Selamat!\n";
+	                cout << "Angka BOOM adalah: " << boom << "\n";
+	                break;
+	            }
+	            turn++;
+	        }
+	        cout << "Masukkan 1 untuk main lagi atau apapun untuk stop: "; cin >> ulang;
+		    if (ulang == "1"){
+		    	max = 100; min = 1;
+			}
+    	} while(ulang == "1");
+}
+
+void singleP() {
+	int guess, min = 1, max = 100;
+    string nama; 
+	system("cls");
+    tampilangka();
+    cout << "| |"; spasi(""); cout << "| |\n";
+    garis();
+    cout << "| |"; spasi("Masukkan nama kamu"); cout << "| |\n";
+    cout << "| |_____________________________________| |\n";
+    cout << "|  "; spasi("Game XIX"); cout << "  |\n";
+    cout << "\\_________________________________________/\n";
+	cout << ">> "; cin >> nama;
+    cout << "Hai, " << nama << "! Yuk kita mulai mainnya. Hati-hati.." << endl;
+    do {
+    	int boom = rand() % 100 + 1;
+		while (true) {
+			string mini = tostring(min), maxi = tostring(max);
+	    	system("pause"); system ("cls");
+	    	tampilangka();
+	    	cout << "| |"; spasi(""); cout << "| |\n";
+    		cout << "| |"; spasi("Jangan sampai kena boom, nanti kalah!"); cout << "| |\n";
+    		garis();
+	        cout << "| |"; spasi("Ayo " + nama + " Tebak angka " + mini + " sampai " + maxi); cout << "| |\n";
+	        cout << "| |_____________________________________| |\n";
+		    cout << "|  "; spasi("Game XIX"); cout << "  |\n";
+		    cout << "\\_________________________________________/\n";
+			cout << ">> ";
+	        while (!(cin >> guess) ||guess <= min || guess >= max) {
+	            cout << "Angka harus antara " << min << " dan " << max << "!" << endl;
+				cin.clear();
+	            cin.ignore();
+	            continue;
+	        }
+	        if (guess == boom) {
+	            cout <<"BOOM! Yahhh kamu kalah, sayang sekali " << nama << "!\n";
+	            cout << "Angka BOOM adalah: " << boom << endl;
+	            break;
+	        } else if (guess < boom) {
+	            min = guess;
+	            cout << nama <<" BOOM lebih besar dari " << guess << endl;
+	        } else {
+	            max = guess;
+	            cout << nama <<" BOOM lebih kecil dari " << guess << endl;
+	        }
+	        if (max - min == 2) {
+	            cout << "Selamat! Kamu berhasil menghindari BOOM!, Keren banget" << endl;
+	            cout << "Angka BOOM adalah: " << boom << endl;
+	            break;
+	        }
+	    }
+	    cout << "Masukkan 1 untuk main lagi atau apapun untuk stop: "; cin >> ulang;
+	    if (ulang == "1"){
+	    	max = 100; min = 1;
+		}
+    } while (ulang == "1");
+}
+
+void menuangka(){
+	int indeks = 1;
+	while (true){
+		system ("cls");
+		tampilangka();
+		string menu[] = {" Single ", " MultiP ", "  BACK  "};
+		cout << "| |"; spasi(""); cout << "| |\n";
+		cout << "| |";spasi("Game Tebak Angka (boom)"); cout << "| |\n";
+		garis(); 
+		for (int i = 0; i < 3; i++) {
+			cout << hitam <<"| |"<< (indeks == i+1 ? yellow : cyan);spasi ("+========+"); cout << hitam<<"| |\n";
+			cout << hitam << "| |"<<(indeks == i+1 ? yellow : cyan); spasi ("|" + menu[i] + "|"); cout << hitam <<"| |\n";
+			cout << hitam <<"| |"<< (indeks == i+1 ? yellow : cyan);spasi ("+========+"); cout << hitam<<"| |\n";
+		}
+		cout << "| |_____________________________________| |\n";
+		cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+		cout <<"\\_________________________________________/\n";
+		char mode = _getch ();
+		switch (mode){
+			case 72:
+				indeks = (indeks == 1) ? 3 : indeks - 1;
+				break;
+			case 80:
+				indeks = (indeks == 3) ? 1 : indeks + 1;
+				break;
+			case 13:{
+				switch (indeks){
+					case 1: singleP(); break;
+					case 2: multiP(); break;
+					case 3: return; break;
+				}
+				break;
+			}	
+		}
+	}
+}
+
+bool mainkanSoal(soal* bankSoal, int jumlahSoal, gamePlayer& pemain, string level, string warna){
+    system("cls");
+    tampilteks();
+    string remin = "PERHATIAN!!!";
+    cetakMid(&remin, &warna, 38, true);
+    cout << "| |_____________________________________| |\n";
+	cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+	cout <<"\\_________________________________________/\n";
+    cout << "\nPetunjuk Cara Pengerjaan!!!\nJika jawaban adalah satu kata tulis awalan dengan huruf kapital\nJika lebih gunakan Kapital Each Word\nJika singkatan gunakan CAPSLOCK\nKamu memiliki 3 kesempatan salah, kamu bebas memilih level soal, poin tiap level berbeda\n";                          
+    system("pause");
+    
+    for(int i = 0; i < jumlahSoal && pemain.nyawa > 0; ++i){
+        system("cls");
+        tampilteks();
+        string levelTampil = "Level: " + level;
+        cetakMid(&levelTampil,&warna, 38, true);
+        cout << "| |_____________________________________| |\n";
+		cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+		cout <<"\\_________________________________________/\n";
+        cout << "Soal " << (i + 1) << ": " << bankSoal[i].pertanyaan << endl;
+        cout << "Jawabanmu: ";
+        string jawabanUser;
+        getline(cin >> ws, jawabanUser);
+
+        if(jawabanUser == bankSoal[i].jawaban){
+            cout << "Benar! + " << bankSoal[i].poin << " poin\n";
+            pemain.skor += bankSoal[i].poin;
+        }else{
+            cout << "Salah! Kamu kehilangan 1 nyawa" << endl;
+            pemain.nyawa--;
+        }
+
+        cout << "Skor sekarang: " << pemain.skor << " | Nyawa tersisa: " << pemain.nyawa << endl;
+        system("pause");
+    }
+    system("cls");
+    tampilteks();
+    string judulAkhir = "Permainan Selesai!";
+    string skorSementara = "Skor Sementara!";
+    if(pemain.nyawa > 0){
+        cetakMid(&skorSementara, &warna, 38, true);
+        cout << "| |_____________________________________| |\n";
+		cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+		cout <<"\\_________________________________________/\n";
+        cout << "Nama Pemain : " << pemain.nama << "\nSkor Akhir  : " << pemain.skor << "\nNyawa Akhir : " << pemain.nyawa << endl;
+    }else{
+        cetakMid(&judulAkhir, &warna, 38, true);
+        cout << "| |_____________________________________| |\n";
+		cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+		cout <<"\\_________________________________________/\n";
+        cout << "Nama Pemain : " << pemain.nama << "\nSkor Akhir  : " << pemain.skor << "\nNyawa Akhir : " << pemain.nyawa << endl;
+        return false;
+    }
+    char selesai;
+    do{
+        cout << "Apakah kamu ingin main lagi? (y/n): ";
+        cin >> selesai;
+        if (selesai == 'y') return true;
+        if (selesai == 'n') return false;
+        cout << "Input ulang\n";
+    }while(pemain.nyawa > 0);
+    system("pause");
+}
+
+void tampilkanHistory(gamePlayer player[], int jumlahPlayer){
+    system("cls");
+    tampilteks();
+    cout << "| |            History Pemain           | |\n";
+    cout << "| |=====================================| |\n";
+
+    if(jumlahPlayer == 0){
+        cout << "              Belum ada pemain               \n";
+    }else{
+        for(int i = 0; i < jumlahPlayer; i++){
+            cout << "Pemain #" << i + 1 << '\n' << (i+1) << ". " << player[i].nama << "\n   Skor: " << player[i].skor << "\n   Nyawa tersisa: " << player[i].nyawa << '\n';
+        }
+    }
+
+    cout << "| |_____________________________________| |\n";
+	cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+	cout <<"\\_________________________________________/\n";
+    cout << "Tekan tombol apapun untuk kembali...\n";
+    system("pause");
+}
+
+void menuteks(){
+    char tombol;
+    int pilihan = 1;
+    gamePlayer player[100];
+    int idxPlayer = 0;
+    string menuUtama[3] = {"| Mulai Main |","| Menu Admin |","|   Keluar   |"};
+    soal easy[10];
+    easy[0] = {"Ibu kota Indonesia?", "Jakarta", 10};
+    easy[1] = {"2 + 2 = ?", "4", 10};
+    soal normal[10];
+    normal[0] = {"Penemu bola lampu?", "Thomas Edison", 15};
+    normal[1] = {"Planet ke-3 dari matahari?", "Bumi", 15};
+    soal hard[10];
+    hard[0] = {"Simbol kimia dari air?", "H2O", 20};
+    hard[1] = {"Siapa penemu teori relativitas?", "Albert Einstein", 20};
+    int jmlEasy = 2;
+    int jmlNormal = 2;
+    int jmlHard = 2;
+    
+    do{
+        bool kembali = false;
+        system("cls");
+        tampilteks();
+        for (int i = 0; i < 3; ++i) {
+            string* warna = &green;
+            bool aktif = (pilihan == i + 1);
+            cetakGaris();
+			cetakMid(&menuUtama[i], warna, 38, aktif);
+            cetakGaris();
+        }
+        cout << "| |_____________________________________| |\n";
+		cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+		cout <<"\\_________________________________________/\n";
+        tombol = getch();
+        switch(tombol){
+            case 72:
+            case 119:
+                if(pilihan == 1) pilihan = 3;
+                else pilihan--;
+                break;
+            case 80:
+            case 115:
+                if(pilihan == 3) pilihan = 1;
+                else pilihan++;
+                break;
+            case 13:
+                if(pilihan == 1){
+                    system("cls");
+                    tampilteks();
+                    bool namaunik = false;
+                    do{
+                        namaunik = true;
+                        cout << "Masukkan nama: ";
+                        getline(cin >> ws, player[idxPlayer].nama);
+                        for(int i = 0;i < idxPlayer;i++){
+                            if(player[i].nama == player[idxPlayer].nama){
+                                cout << "Nama pemain sudah digunakan, tambahkan karakter atau tanda apapun!!!\n";
+                                namaunik = false;
+                                break;
+                            } 
+                        }
+                    }while(!namaunik);
+                    int pemainAktif = idxPlayer;
+                    idxPlayer++;
+                    bool keluarDariLevel = false;
+                    system("pause");
+                    do{
+                        if (player[pemainAktif].nyawa == 0) {
+                            keluarDariLevel = true;
+                            break;
+                        }
+                        system("cls");
+                        tampilteks();
+                        cetakGaris();
+                        for (int i = 0; i < 3; ++i){
+                            string* warna;
+                            if (i == 0) warna = &green;
+                            else if (i == 1) warna = &yellow;
+                            else if (i == 2) warna = &merah;
+                            bool aktif = (pilihan == i + 1);
+                            string namaLevel;
+                            if (i == 0) namaLevel = "|    Easy    |";
+                            else if (i == 1) namaLevel = "|   Normal   |";
+                            else namaLevel = "|    Hard    |";
+                            cetakMid(&namaLevel, warna, 38, aktif);
+                            cetakGaris();
+                        }
+                        cout << "| |_____________________________________| |\n";
+						cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+						cout <<"\\_________________________________________/\n";
+				        tombol = getch();
+                        switch(tombol){
+                            case 72:
+                            case 119:
+                                if(pilihan == 1) pilihan = 3;
+                                else pilihan--;
+                                break;
+                            case 80:
+                            case 115:
+                                if(pilihan == 3) pilihan = 1;
+                                else pilihan++;
+                                break;
+                            case 13:
+                                string jawabanUser;
+                                soal* bankSoal;
+                                string warnaLevel;
+                                string namaLevel;
+                                    if(pilihan == 1){
+                                    int jumlahSoal = 0;
+                                        if(pilihan == 1){
+                                            warnaLevel = green;
+                                            namaLevel = "Easy";
+                                            bankSoal = easy;
+                                            jumlahSoal = jmlEasy;
+                                        }else if (pilihan == 2){
+                                            warnaLevel = yellow;
+                                            namaLevel = "Normal";
+                                            bankSoal = normal;
+                                            jumlahSoal = jmlNormal;
+                                        }else{
+                                            warnaLevel = merah;
+                                            namaLevel = "Hard";
+                                            bankSoal = hard;
+                                            jumlahSoal = jmlHard;
+                                        }
+                                        bool lanjut = mainkanSoal(bankSoal, jumlahSoal, player[pemainAktif], namaLevel, warnaLevel); 
+                                        if(!lanjut){
+                                            keluarDariLevel = true;
+                                        }
+                                    }else if(pilihan == 2){
+                                        int jumlahSoal = 0;
+                                        if(pilihan == 1){
+                                            warnaLevel = green;
+                                            namaLevel = "Easy";
+                                            bankSoal = easy;
+                                            jumlahSoal = jmlEasy;
+                                        }else if (pilihan == 2){
+                                            warnaLevel = yellow;
+                                            namaLevel = "Normal";
+                                            bankSoal = normal;
+                                            jumlahSoal = jmlNormal;
+                                        }else{
+                                            warnaLevel = merah;
+                                            namaLevel = "Hard";
+                                            bankSoal = hard;
+                                            jumlahSoal = jmlHard;
+                                        }
+                                        bool lanjut = mainkanSoal(bankSoal, jumlahSoal, player[pemainAktif], namaLevel, warnaLevel); 
+                                        if(!lanjut){
+                                            keluarDariLevel = true;
+                                        }                                                                  
+                                    }else{
+                                        int jumlahSoal = 0;
+                                        if(pilihan == 1){
+                                            warnaLevel = green;
+                                            namaLevel = "Easy";
+                                            bankSoal = easy;
+                                            jumlahSoal = jmlEasy;
+                                        }else if (pilihan == 2){
+                                            warnaLevel = yellow;
+                                            namaLevel = "Normal";
+                                            bankSoal = normal;
+                                            jumlahSoal = jmlNormal;
+                                        }else{
+                                            warnaLevel = merah;
+                                            namaLevel = "Hard";
+                                            bankSoal = hard;
+                                            jumlahSoal = jmlHard;
+                                        }
+                                        bool lanjut = mainkanSoal(bankSoal, jumlahSoal, player[pemainAktif], namaLevel, warnaLevel); 
+                                        if(!lanjut){
+                                            keluarDariLevel = true;
+                                        }
+                                    }
+                                }                  
+                    }while(!keluarDariLevel);  
+                    pilihan = 1;  
+                    system("pause");    
+                }else if(pilihan == 2){
+                    system("cls");
+                    tampilteks();
+                    cetakMid(&menuUtama[1], &reset, 38, true);
+                    cout << "| |=====================================| |\n";
+                    string uname, pass;
+                    cout << "Masukkan Username: ";
+                    cin.ignore();
+                    getline(cin, uname);
+                    cout << "Masukkan Password: ";
+                    getline(cin, pass);
+                    if(uname != "Kelompok19" || pass != "12345"){
+                        cout << "Login sebagai admin gagal!!!\n";
+                        system("pause");
+                        continue;
+                    }else{
+                        cout << "Login sebagai admin sukses!!!\n";
+                        system("pause");
+                        bool keluar = false;
+                        pilihan = 1;
+                            do{
+                                system("cls");
+                                tampilteks();
+                                cetakMid(&menuUtama[1], &reset, 38, true);
+                                string menuAdmin[5] = {"Tambah Soal Easy","Tambah Soal Normal","Tambah Soal Hard","History Pemain","Kembali"};
+                                cout << "| |=====================================| |\n";
+                                for(int i = 0; i < 5; ++i){
+                                    bool aktif = (pilihan == i + 1);
+                                    string* warna;
+                                    if (i == 0) warna = &green;
+                                    else if (i == 1) warna = &yellow;
+                                    else if (i == 2) warna = &merah;
+                                    else warna = &hitam;
+                                    cetakMid(&menuAdmin[i], warna, 38, aktif);
+                                    cetakGaris();
+                                }
+                                cout << "| |_____________________________________| |\n";
+                                cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+                                cout <<"\\_________________________________________/\n";
+                                tombol = getch();
+                                switch(tombol){
+                                    case 72:
+                                    case 119:
+                                        if(pilihan == 1) pilihan = 5;
+                                        else pilihan--;
+                                        break;
+                                    case 80:
+                                    case 115:
+                                        if(pilihan == 5) pilihan = 1;
+                                        else pilihan++;
+                                        break;
+                                    case 13:
+                                        if(pilihan == 1){
+                                            system("cls");
+                                            tampilteks();
+                                            cout << "Masukkan Pertanyaan: ";
+                                            getline(cin, easy[jmlEasy].pertanyaan);
+                                            cout << "Masukkan Jawaban: ";
+                                            getline(cin, easy[jmlEasy].jawaban);
+                                            cout << "Masukkan skor: ";
+                                            cin >> easy[jmlEasy].poin;
+                                            jmlEasy++;                                  
+                                        }else if(pilihan == 2){
+                                            system("cls");
+                                            tampilteks();
+                                            cout << "Masukkan Pertanyaan: ";
+                                            getline(cin, normal[jmlNormal].pertanyaan);
+                                            cout << "Masukkan Jawaban: ";
+                                            getline(cin, normal[jmlNormal].jawaban);
+                                            cout << "Masukkan skor: ";
+                                            cin >> normal[jmlNormal].poin;
+                                            jmlNormal++;                                   
+                                        }else if(pilihan == 3){
+                                            system("cls");
+                                            tampilteks();
+                                            cout << "Masukkan Pertanyaan: ";
+                                            getline(cin, hard[jmlHard].pertanyaan);
+                                            cout << "Masukkan Jawaban: ";
+                                            getline(cin, hard[jmlHard].jawaban);
+                                            cout << "Masukkan skor: ";
+                                            cin >> hard[jmlHard].poin;
+                                            jmlHard++;        
+                                        }else if(pilihan == 4){
+                                            tampilkanHistory(player, idxPlayer);
+                                        }else{
+                                            keluar = true;
+                                            break;
+                                        }
+                                        break;
+                                }        
+                            }while(!keluar);
+                            pilihan = 1;
+                        }
+                        
+                }else{
+                    return;
+                }
+        break;
+        }
+    }while(true);       
+    return;
+}
+
+int main(){
+	srand(time(0)); 
+	int indeks = 1;
+	while (true){
+		system ("cls");
+		logo();
+		string menu[] = {" BOOM ", " GTRA ", " EXIT "};
+		cout << "| |";spasi("Hi O~O"); cout << "| |\n";
+		garis(); 
+		for (int i = 0; i < 3; i++) {
+			cout << hitam <<"| |"<< (indeks == i+1 ? yellow : cyan);spasi ("+======+"); cout << hitam<<"| |\n";
+			cout << hitam << "| |"<<(indeks == i+1 ? yellow : cyan); spasi ("|" + menu[i] + "|"); cout << hitam <<"| |\n";
+			cout << hitam <<"| |"<< (indeks == i+1 ? yellow : cyan);spasi ("+======+"); cout << hitam<<"| |\n";
+		}
+		cout << "| |_____________________________________| |\n";
+		cout <<"|  "; spasi("Game XIX"); cout << "  |\n";
+		cout <<"\\_________________________________________/\n";
+		char input = _getch ();
+		switch (input){
+			case 72:
+				indeks = (indeks == 1) ? 3 : indeks - 1;
+				break;
+			case 80:
+				indeks = (indeks == 3) ? 1 : indeks + 1;
+				break;
+			case 13:{
+				switch (indeks){
+					case 1: menuangka(); break;
+					case 2: menuteks(); break;
+					case 3: return 0; break;
+				}
+				break;
+			}	
+		}
+	}
+}
